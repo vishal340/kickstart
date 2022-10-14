@@ -45,7 +45,7 @@ int main(){
       int x,y;
       int64_t z;
       ss>>x>>y>>z;
-      x--;y--;z;
+      x--;y--;
       cust[x][y]=1<<i;
       coin[x][y]=z;
     }
