@@ -52,7 +52,7 @@ void solve(){
 			if(it1!=B.end()){
 				t=it1->second;
 				if(j==1){
-				t=max(t,end-e);
+					t=max(t,end-e);
 				}
 			}
 			else if(j==1){
