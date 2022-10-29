@@ -26,8 +26,9 @@ void solve(){
 	while(i!=n){
 		int l=0;
 		int64_t end=F.rbegin()->second;
+		auto it1=F.begin();
 		do{
-			auto it1=upper_bound(F.begin(),F.end(),data[i][0],[](auto a,auto e){return a<e.first;});
+			it1=upper_bound(it1,F.end(),data[i][0],[](auto a,auto e){return a<e.first;});
 			int64_t t=0l;
 			if(it1!=F.begin()){
 				t=(--it1)->second;
@@ -37,7 +38,7 @@ void solve(){
 				t=max(t,B.begin()->second -e);
 			}
 			t+=data[i][2];
-			auto it2=upper_bound(F.begin(),F.end(),t,[](auto a,auto e){return a<e.second;});
+			auto it2=upper_bound(it1,F.end(),t,[](auto a,auto e){return a<e.second;});
 			if(it2==F.end() || (it1!=F.end() && it1->first<=it2->first)){
 				it1=F.erase(it1,it2);
 				F[data[i][0]]=t;
@@ -46,8 +47,9 @@ void solve(){
 			l++;
 		}
 		while(i!=n && data[i-1][1]==data[i][1]);
+		it1=B.end();
 		for(int j=1;j<=l;j++){
-			auto it1=upper_bound(B.begin(),B.end(),data[i-j][0],[](auto a,auto e){return a<=e.first;});
+			it1=upper_bound(B.begin(),it1,data[i-j][0],[](auto a,auto e){return a<=e.first;});
 			int64_t t=0l;
 			if(it1!=B.end()){
 				t=it1->second;
@@ -59,7 +61,7 @@ void solve(){
 				t=end-e;
 			}
 			t+=data[i-j][2];
-			auto it2=upper_bound(B.begin(),B.end(),t,[](auto a,auto e){return a>=e.second;});
+			auto it2=upper_bound(B.begin(),it1,t,[](auto a,auto e){return a>=e.second;});
 			if(it1==B.end() || (it2!=B.end() && it2->second>=it1->second)){
 				it1=B.erase(it2,it1);
 				B[data[i-j][0]]=t;
