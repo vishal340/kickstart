@@ -7,6 +7,7 @@ void solve(){
 	int n,m,k,t1,t2;
 	cin>>n>>m>>k;
 	vector<bool>I(n,false);
+	vector<bool>I1(n,true);
 	unordered_map<int,vector<int>>M;
 	unordered_map<int,vector<int>>M_;
 	for(int i=0;i<m;i++){
@@ -30,7 +31,7 @@ void solve(){
 	};
 	for(auto i:M){
 	 int b=i.first;
-		if(!I[b]){
+		if(!I[b] && I1[b]){
 			 int j=1;
 			 L[0]=b;
 			 int count=1+i.second.size();
@@ -40,38 +41,43 @@ void solve(){
 					 lambda1(b,lambda1);
 			 }
 			 else{
-			 bool cont=true;
-			 set<int>acc;
-			 acc.insert(b);
-			 acc.insert(i.second.begin(),i.second.end());
-			 for(auto i1:i.second){
-				 L[j]=i1;
-				 auto lambda =[&](int a,set<int>& acc,int j,auto& self) -> void{
-					 for(int i2=0;i2<j;i2++){
-						 if(L[i2]==a)return;
-					 }
-					 j++;
-					 if(M.count(a)){
-						 acc.insert(M[a].begin(),M[a].end());
-						 if(acc.size()<=k && j<k){
-							 for(auto i2:M[a]){
-								 if(!cont)
-									 return;
-								 L[j]=i2;
-								 self(i2,acc,j,self);
+				 bool cont=true;
+				 set<int>acc;
+				 acc.insert(b);
+				 acc.insert(i.second.begin(),i.second.end());
+				 for(auto i1:i.second){
+					 L[j]=i1;
+					 auto lambda =[&](int a,int j,auto& self) -> void{
+						 for(int i2=0;i2<j;i2++){
+							 if(L[i2]==a)return;
+						 }
+						 j++;
+						 if(M.count(a)){
+							 acc.insert(M[a].begin(),M[a].end());
+							 if(acc.size()<=k){
+								 for(auto i2:M[a]){
+									 if(!cont)
+										 return;
+									 L[j]=i2;
+									 self(i2,j,self);
+								 }
 							 }
-						 }
-						 else{
-							 cont=false;
-							 I[b]=true;
-						 }
-					 } 
-				 };
-				 lambda(i1,acc,j,lambda);
-			 }
-			 if(I[b] && M_.count(b)){
-				lambda1(b,lambda1);
-			 }
+							 else{
+								 cont=false;
+								 I[b]=true;
+							 }
+						 } 
+					 };
+					 lambda(i1,j,lambda);
+				 }
+				 if(I[b] && M_.count(b)){
+					lambda1(b,lambda1);
+				 }
+				 else if(!I[b]){
+					 for(auto l:acc){
+						 I1[l]=false;
+					 }
+				 }
 			 }
 		}
 	}
@@ -80,7 +86,7 @@ void solve(){
 
 int main(){
 	ios::sync_with_stdio(0);
-	// cin.tie(0);
+	cin.tie(0);
 	int T;
 	cin>>T;
 	for(int t=1;t<=T;t++){
