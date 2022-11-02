@@ -1,6 +1,5 @@
-input/*
-template.cpp
-/**/a.out
-/**/output
-/**/test*
-/**/sample*
+/*
+!/**/1.cpp
+!/**/2.cpp
+!/**/3.cpp
+!/**/4.cpp
