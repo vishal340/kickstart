@@ -42,9 +42,11 @@ void solve(){
 			 }
 			 else{
 				 bool cont=true;
-				 set<int>acc;
-				 acc.insert(b);
-				 acc.insert(i.second.begin(),i.second.end());
+				 set<int>acc1;
+				 vector<int>acc;
+				 acc.push_back(b);
+				 acc1.insert(b);
+				 acc1.insert(i.second.begin(),i.second.end());
 				 for(auto i1:i.second){
 					 L[j]=i1;
 					 auto lambda =[&](int a,int j,auto& self) -> void{
@@ -53,13 +55,16 @@ void solve(){
 						 }
 						 j++;
 						 if(M.count(a)){
-							 acc.insert(M[a].begin(),M[a].end());
-							 if(acc.size()<=k){
+							 acc1.insert(M[a].begin(),M[a].end());
+							 if(acc1.size()<=k){
 								 for(auto i2:M[a]){
 									 if(!cont)
 										 return;
-									 L[j]=i2;
-									 self(i2,j,self);
+									 if(find(acc.begin(),acc.end(),i2)==acc.end()){
+									 	L[j]=i2;
+									 	self(i2,j,self);
+										acc.push_back(i2);
+									 }
 								 }
 							 }
 							 else{
@@ -68,13 +73,14 @@ void solve(){
 							 }
 						 } 
 					 };
+					 acc.push_back(i1);
 					 lambda(i1,j,lambda);
 				 }
 				 if(I[b] && M_.count(b)){
-					lambda1(b,lambda1);
+					 lambda1(b,lambda1);
 				 }
-				 else if(!I[b]){
-					 for(auto l:acc){
+				 if(!I[b]){
+					 for(auto l:acc1){
 						 I1[l]=false;
 					 }
 				 }
