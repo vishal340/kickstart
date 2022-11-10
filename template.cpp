@@ -1,8 +1,6 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-const int d4i[4]={-1,0,1,0},d4j[4]={0,1,0,-1};
-
 void solve(){
 
 }

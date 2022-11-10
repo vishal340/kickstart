@@ -1,17 +1,11 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-const int d4i[4]={-1,0,1,0},d4j[4]={0,1,0,-1};
 int64_t mod=1000000007;
-int64_t inv(int64_t a){
-	int64_t ret=(a*a)%mod;
-	ret=(ret*a)%mod;
-	a=ret;
-	for(int i=0;i<4;i++)ret=(ret*a)%mod;
-	a=ret;
-	ret=1;
-	for(int i=0;i<27;i++){
-		if(66666667 &(1<<i))ret=(ret*a)%mod;
+inline int64_t inv(int64_t a){
+	int64_t ret=1;
+	for(int i=0;i<31;i++){
+		if((mod-2) &(1<<i))ret=(ret*a)%mod;
 		a=(a*a)%mod;
 	}
 	return ret;
@@ -27,30 +21,31 @@ void solve(){
 		fact[i]=(fact[i-1]*i)%mod;
 	}
 	int64_t mul=2;
-	for(int i=N-2;i>=0;i--){
+	for(int i=N-2;i>0;i--){
 		fact[i]=(mul*fact[i])%mod;
 		mul=(mul*(N-i+1))%mod;
 	}
-	int64_t sum=(2*fact[N])%mod;
-	function<void(int,int,int,int64_t&)> lambda;
-	lambda = [&](int a,int b,int it,int64_t& sum){
-		sum=(sum+(b-a-1)*fact[it-1])%mod;
-		for(int k=a+1;k<b-1;k++){
-			for(int l=k+1;l<b;l++){
-				if(ch[k]==ch[l]){
-					sum=(sum+fact[it-2])%mod;
-					lambda(k,l,it-2,sum);
+	vector<vector<vector<int64_t>>> dp(N,vector<vector<int64_t>>(N,vector<int64_t>(N,0)));
+	for(int i=0;i<N;i++){
+		for(int j=0;j<N;j++)
+			dp[i][j][0]=1;
+		for(int j=i;j<N;j++)
+			dp[i][j][1]=j-i+1;
+	}
+	for(int l=2;l<N;l++){
+		for(int d=l-1;d<N;d++){
+			for(int i=0;i<N-d;i++){
+				if(ch[i]==ch[i+d])dp[i][i+d][l]=dp[i+1][i+d-1][l-2];
+				else{
+					dp[i][i+d][l]=(dp[i+1][i+d][l]+dp[i][i+d-1][l]+mod-dp[i+1][i+d-1][l])%mod;
 				}
 			}
 		}
-	};
-	for(int i=0;i<N-1;i++){
-		for(int j=i+1;j<N;j++){
-			if(ch[i]==ch[j]){
-				sum=(sum+fact[N-2])%mod;
-				lambda(i,j,N-2,sum);
-			}
-		}
+	}
+	int64_t sum=(2*fact[N])%mod;
+	for(int i=2;i<N;i++){
+		int64_t t=(dp[0][N-1][i]*fact[i])%mod;
+		sum=(sum+t)%mod;
 	}
 	cout<<(sum*inv(fact[N]))%mod;
 }
